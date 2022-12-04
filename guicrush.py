@@ -1,6 +1,9 @@
 import random
 from math import sin, cos, pi, log
 from tkinter import *
+import turtle
+import time
+
 CANVAS_WIDTH = 640
 CANVAS_HEIGHT = 640
 CANVAS_CENTER_X = CANVAS_WIDTH / 2
@@ -43,7 +46,7 @@ class Heart:
         self._edge_diffusion_points = set()
         self._center_diffusion_points = set()
         self.all_points = {}
-        self.build(10000)
+        self.build(1000)
         self.generate_frame = generate_frame
         for frame in range(generate_frame):
             self.calc(frame)
@@ -75,24 +78,11 @@ class Heart:
 
     def calc(self, generate_frame):
         ratio = 10 * curve(generate_frame / 10 * pi)
-        halo_radius = int(4 * 6 * (1 + curve(generate_frame / 10 * pi)))
-        halo_number = int(3000 + 4000 * abs(curve(generate_frame / 10 * pi) ** 2))
         all_points = []
-        heart_halo_points = set()
-        # for _ in range (halo_number):
-        #     t = random.uniform(0, 2 * pi)
-        #     x, y = heart_function(t, shrink_ratio=11.5)
-        #     x, y = shrink(x, y, halo_radius)
-        #     if (x, y) not in heart_halo_points:
-        #         heart_halo_points.add((x, y))
-        #         x += random.randint(-14, 14)
-        #         y += random.randint(-14, 14)
-        #         size = random.choice((2, 2, 1))
-        #         all_points.append((x, y, size))
         for x, y in self._points:
             x, y = self.calc_position(x, y, ratio)
             size = 1
-            all_points.append((x, y, size))
+            # all_points.append((x, y, size))
         for x, y in self._edge_diffusion_points:
             x, y = self.calc_position(x, y, ratio)
             size = random.randint(1, 2)
@@ -100,7 +90,7 @@ class Heart:
         for x, y in self._center_diffusion_points:
             x, y = self.calc_position(x, y, ratio)
             size = random.randint(1, 2)
-            # all_points.append((x, y, size))
+            all_points.append((x, y, size))
         self.all_points[generate_frame] = all_points
 
     def render(self, render_canvas, render_frame):
@@ -117,5 +107,10 @@ if __name__ == '__main__':
     canvas = Canvas(root, bg='black', height=CANVAS_HEIGHT, width=CANVAS_WIDTH)
     canvas.pack()
     heart = Heart()
+    for x,y in heart._points:
+        canvas.create_rectangle(x, y, x + 1, y + 1, width = 0, fill = HEART_COLOR)
+        root.update()
+        time.sleep(0.03)
+
     draw(root, canvas, heart)
     root.mainloop()

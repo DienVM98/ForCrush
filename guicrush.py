@@ -42,7 +42,7 @@ class Heart:
         self._edge_diffusion_points = set()
         self._center_diffusion_points = set()
         self.all_points = {}
-        self.build(100)
+        self.build(5000)
         self.generate_frame = generate_frame
         for frame in range(generate_frame):
             self.calc(frame)
@@ -88,18 +88,48 @@ class Heart:
     def render(self, render_canvas, render_frame):
         for x, y, size in self.all_points[render_frame % self.generate_frame]:
             render_canvas.create_rectangle(x, y, x + size, y + size, width = 0, fill = HEART_COLOR)
-        points = [100,100, 85,140, 115,140]
-        canvas.create_polygon(points, fill='green')
-        points = [100,120, 85,160, 115,160]
-        canvas.create_polygon(points, fill='green')
-        points = [100,140, 85,180, 115,180]
-        canvas.create_polygon(points, fill='green')
+        render_tree(render_canvas)
+        
         # canvas.create_line(CANVAS_CENTER_X, CANVAS_CENTER_Y, CANVAS_CENTER_X + 10, CANVAS_CENTER_Y + 10, width = 0, fill = "#0000FF")
 
 def draw(root: Tk, render_canvas: Canvas, render_heart:Heart, render_frame = 0):
     render_canvas.delete('all')
     render_heart.render(render_canvas, render_frame)
     root.after(160, draw, root, render_canvas, render_heart, render_frame +1)
+
+def render_tree(render_canvas: Canvas):
+    draw_tree(render_canvas, 70, 830)
+    draw_tree(render_canvas, 142, 810)
+    draw_tree(render_canvas, 250, 820)
+    draw_tree(render_canvas, 329, 840)
+    draw_tree(render_canvas, 402, 830)
+    draw_tree(render_canvas, 475, 810)
+    draw_tree(render_canvas, 595, 840)
+    draw_tree(render_canvas, 675, 810)
+    draw_tree(render_canvas, 783, 840)
+    draw_tree(render_canvas, 847, 820)
+    draw_tree(render_canvas, 925, 840)
+    draw_tree(render_canvas, 1047, 830)
+    draw_tree(render_canvas, 1119, 810)
+    draw_tree(render_canvas, 1204, 840)
+    draw_tree(render_canvas, 1269, 820)
+    draw_tree(render_canvas, 1339, 840)
+    draw_tree(render_canvas, 1458, 830)
+    draw_tree(render_canvas, 1514, 810)
+    draw_tree(render_canvas, 1644, 830)
+    draw_tree(render_canvas, 1785, 820)
+    draw_tree(render_canvas, 1859, 820)
+
+
+
+def draw_tree(render_canvas: Canvas, x,y):
+    print('')
+    points = [x,y, x-30,y+80, x+30,y+80]
+    render_canvas.create_polygon(points, fill='green')
+    points = [x,y+40, x-30,y+120, x+30,y+120]
+    render_canvas.create_polygon(points, fill='green')
+    points = [x,y+80, x-30,y+160, x+30,y+160]
+    render_canvas.create_polygon(points, fill='green')
 
 if __name__ == '__main__':
     root = Tk()

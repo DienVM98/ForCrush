@@ -4,10 +4,6 @@ from tkinter import *
 import turtle
 import time
 
-CANVAS_WIDTH = 640
-CANVAS_HEIGHT = 640
-CANVAS_CENTER_X = CANVAS_WIDTH / 2
-CANVAS_CENTER_Y = CANVAS_HEIGHT / 2
 IMAGE_ENLARGE = 11
 HEART_COLOR = "#FF0000"
  
@@ -46,7 +42,7 @@ class Heart:
         self._edge_diffusion_points = set()
         self._center_diffusion_points = set()
         self.all_points = {}
-        self.build(1000)
+        self.build(100)
         self.generate_frame = generate_frame
         for frame in range(generate_frame):
             self.calc(frame)
@@ -79,23 +75,26 @@ class Heart:
     def calc(self, generate_frame):
         ratio = 10 * curve(generate_frame / 10 * pi)
         all_points = []
-        for x, y in self._points:
-            x, y = self.calc_position(x, y, ratio)
-            size = 1
-            # all_points.append((x, y, size))
         for x, y in self._edge_diffusion_points:
             x, y = self.calc_position(x, y, ratio)
-            size = random.randint(1, 2)
+            size = random.randint(1, 3)
             all_points.append((x, y, size))
         for x, y in self._center_diffusion_points:
             x, y = self.calc_position(x, y, ratio)
-            size = random.randint(1, 2)
+            size = random.randint(1, 3)
             all_points.append((x, y, size))
         self.all_points[generate_frame] = all_points
 
     def render(self, render_canvas, render_frame):
         for x, y, size in self.all_points[render_frame % self.generate_frame]:
             render_canvas.create_rectangle(x, y, x + size, y + size, width = 0, fill = HEART_COLOR)
+        points = [100,100, 85,140, 115,140]
+        canvas.create_polygon(points, fill='green')
+        points = [100,120, 85,160, 115,160]
+        canvas.create_polygon(points, fill='green')
+        points = [100,140, 85,180, 115,180]
+        canvas.create_polygon(points, fill='green')
+        # canvas.create_line(CANVAS_CENTER_X, CANVAS_CENTER_Y, CANVAS_CENTER_X + 10, CANVAS_CENTER_Y + 10, width = 0, fill = "#0000FF")
 
 def draw(root: Tk, render_canvas: Canvas, render_heart:Heart, render_frame = 0):
     render_canvas.delete('all')
@@ -104,8 +103,14 @@ def draw(root: Tk, render_canvas: Canvas, render_heart:Heart, render_frame = 0):
 
 if __name__ == '__main__':
     root = Tk()
-    canvas = Canvas(root, bg='black', height=CANVAS_HEIGHT, width=CANVAS_WIDTH)
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    canvas = Canvas(root, bg='black', height=screen_height, width=screen_width)
     canvas.pack()
+    CANVAS_WIDTH = screen_width
+    CANVAS_HEIGHT = screen_height
+    CANVAS_CENTER_X = CANVAS_WIDTH / 2
+    CANVAS_CENTER_Y = CANVAS_HEIGHT / 2
     heart = Heart()
     for x,y in heart._points:
         canvas.create_rectangle(x, y, x + 1, y + 1, width = 0, fill = HEART_COLOR)

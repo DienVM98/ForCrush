@@ -42,7 +42,7 @@ class Heart:
         self._edge_diffusion_points = set()
         self._center_diffusion_points = set()
         self.all_points = {}
-        self.build(5000)
+        self.build(1000)
         self.generate_frame = generate_frame
         for frame in range(generate_frame):
             self.calc(frame)
@@ -89,8 +89,7 @@ class Heart:
         for x, y, size in self.all_points[render_frame % self.generate_frame]:
             render_canvas.create_rectangle(x, y, x + size, y + size, width = 0, fill = HEART_COLOR)
         render_tree(render_canvas)
-        
-        # canvas.create_line(CANVAS_CENTER_X, CANVAS_CENTER_Y, CANVAS_CENTER_X + 10, CANVAS_CENTER_Y + 10, width = 0, fill = "#0000FF")
+        render_snow(render_canvas)
 
 def draw(root: Tk, render_canvas: Canvas, render_heart:Heart, render_frame = 0):
     render_canvas.delete('all')
@@ -120,8 +119,6 @@ def render_tree(render_canvas: Canvas):
     draw_tree(render_canvas, 1785, 820)
     draw_tree(render_canvas, 1859, 820)
 
-
-
 def draw_tree(render_canvas: Canvas, x,y):
     print('')
     points = [x,y, x-30,y+80, x+30,y+80]
@@ -130,6 +127,27 @@ def draw_tree(render_canvas: Canvas, x,y):
     render_canvas.create_polygon(points, fill='green')
     points = [x,y+80, x-30,y+160, x+30,y+160]
     render_canvas.create_polygon(points, fill='green')
+
+def render_snow(render_canvas: Canvas):
+    for i in range(len(snowFall)):
+        draw_snow(render_canvas, snowFall[i])
+ 
+        snowFall[i][1] += 1
+        if snowFall[i][1] > CANVAS_HEIGHT:
+            y = random.randrange(-50, -10)
+            snowFall[i][1] = y
+        
+            x = random.randrange(0, CANVAS_WIDTH)
+            snowFall[i][0] = x
+
+def draw_snow(render_canvas: Canvas, snowFall):
+    smallsize = size - 1 
+    x = snowFall[0]
+    y = snowFall[1]
+    render_canvas.create_line(x-size,y, x+size,y, fill='white')
+    render_canvas.create_line(x,y-size, x,y+size, fill='white')
+    render_canvas.create_line(x+smallsize,y-smallsize, x-smallsize,y+smallsize, fill='white')
+    render_canvas.create_line(x-smallsize,y-smallsize, x+smallsize,y+smallsize, fill='white')
 
 if __name__ == '__main__':
     root = Tk()
@@ -141,11 +159,19 @@ if __name__ == '__main__':
     CANVAS_HEIGHT = screen_height
     CANVAS_CENTER_X = CANVAS_WIDTH / 2
     CANVAS_CENTER_Y = CANVAS_HEIGHT / 2
+    snowFall = []
+    for i in range(200):
+        x = random.randrange(0, CANVAS_WIDTH)
+        y = random.randrange(0, CANVAS_HEIGHT)
+        snowFall.append([x, y])
+    size = random.randint(3,5)
     heart = Heart()
     for x,y in heart._points:
         canvas.create_rectangle(x, y, x + 1, y + 1, width = 0, fill = HEART_COLOR)
         root.update()
-        time.sleep(0.03)
+        time.sleep(0.01)
+
+    time.sleep(1)    
 
     draw(root, canvas, heart)
     root.mainloop()

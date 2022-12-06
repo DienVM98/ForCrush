@@ -182,11 +182,11 @@ if __name__ == '__main__':
     size = random.randint(3,5)
     heart = Heart()
     for x,y in heart._points:
+        canvas.create_text(CANVAS_CENTER_X, CANVAS_CENTER_Y, text="HELLO WORLD", fill="red", font=('Helvetica 15 bold'))
         canvas.create_rectangle(x, y, x + 1, y + 1, width = 0, fill = HEART_COLOR)
         root.update()
         time.sleep(0.01)
 
     time.sleep(1)    
-
     draw(root, canvas, heart)
     root.mainloop()

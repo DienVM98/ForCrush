@@ -42,7 +42,7 @@ class Heart:
         self._edge_diffusion_points = set()
         self._center_diffusion_points = set()
         self.all_points = {}
-        self.build(1000)
+        self.build(3000)
         self.generate_frame = generate_frame
         for frame in range(generate_frame):
             self.calc(frame)
@@ -74,14 +74,27 @@ class Heart:
 
     def calc(self, generate_frame):
         ratio = 10 * curve(generate_frame / 10 * pi)
+        halo_radius = int(4 * 6 * (1 + curve(generate_frame / 10 * pi)))
+        halo_number = 100
         all_points = []
+        heart_halo_points = set()
+        for _ in range (halo_number):
+            t = random.uniform(0, 2 * pi)
+            x, y = heart_function(t, shrink_ratio=11.5)
+            x, y = shrink(x, y, halo_radius)
+            if (x, y) not in heart_halo_points:
+                heart_halo_points.add((x, y))
+                x += random.randint(-70, 70)
+                y += random.randint(-70, 70)
+                size = random.choice((2, 2, 1))
+                all_points.append((x, y, size))
         for x, y in self._edge_diffusion_points:
             x, y = self.calc_position(x, y, ratio)
-            size = random.randint(1, 3)
+            size = 1
             all_points.append((x, y, size))
         for x, y in self._center_diffusion_points:
             x, y = self.calc_position(x, y, ratio)
-            size = random.randint(1, 3)
+            size = 1
             all_points.append((x, y, size))
         self.all_points[generate_frame] = all_points
 
@@ -132,7 +145,7 @@ def render_snow(render_canvas: Canvas):
     for i in range(len(snowFall)):
         draw_snow(render_canvas, snowFall[i])
  
-        snowFall[i][1] += 1
+        snowFall[i][1] += 2
         if snowFall[i][1] > CANVAS_HEIGHT:
             y = random.randrange(-50, -10)
             snowFall[i][1] = y
@@ -141,11 +154,12 @@ def render_snow(render_canvas: Canvas):
             snowFall[i][0] = x
 
 def draw_snow(render_canvas: Canvas, snowFall):
-    smallsize = size - 1 
     x = snowFall[0]
     y = snowFall[1]
-    render_canvas.create_line(x-size,y, x+size,y, fill='white')
-    render_canvas.create_line(x,y-size, x,y+size, fill='white')
+    Snow_size = snowFall[2]
+    smallsize = Snow_size - 1 
+    render_canvas.create_line(x-Snow_size,y, x+Snow_size,y, fill='white')
+    render_canvas.create_line(x,y-Snow_size, x,y+Snow_size, fill='white')
     render_canvas.create_line(x+smallsize,y-smallsize, x-smallsize,y+smallsize, fill='white')
     render_canvas.create_line(x-smallsize,y-smallsize, x+smallsize,y+smallsize, fill='white')
 
@@ -163,7 +177,8 @@ if __name__ == '__main__':
     for i in range(200):
         x = random.randrange(0, CANVAS_WIDTH)
         y = random.randrange(0, CANVAS_HEIGHT)
-        snowFall.append([x, y])
+        Snow_size = random.randint(0,4)
+        snowFall.append([x, y, Snow_size])
     size = random.randint(3,5)
     heart = Heart()
     for x,y in heart._points:

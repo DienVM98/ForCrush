@@ -1,7 +1,6 @@
 import random
 from math import sin, cos, pi, log
-from tkinter import *
-import turtle
+import tkinter as tk
 import time
 
 IMAGE_ENLARGE = 11
@@ -104,12 +103,12 @@ class Heart:
         render_tree(render_canvas)
         render_snow(render_canvas)
 
-def draw(root: Tk, render_canvas: Canvas, render_heart:Heart, render_frame = 0):
+def draw(root: tk.Tk, render_canvas: tk.Canvas, render_heart:Heart, render_frame = 0):
     render_canvas.delete('all')
     render_heart.render(render_canvas, render_frame)
     root.after(160, draw, root, render_canvas, render_heart, render_frame +1)
 
-def render_tree(render_canvas: Canvas):
+def render_tree(render_canvas: tk.Canvas):
     draw_tree_fixed(render_canvas, 70, 830)
     draw_tree_fixed(render_canvas, 142, 810)
     draw_tree_fixed(render_canvas, 250, 820)
@@ -134,7 +133,7 @@ def render_tree(render_canvas: Canvas):
     for i in range(len(Tree)):
         draw_tree(render_canvas, Tree[i])
 
-def draw_tree(render_canvas: Canvas, Tree):
+def draw_tree(render_canvas: tk.Canvas, Tree):
     x = Tree[0]
     y = Tree[1]
     points = [x,y, x-30,y+80, x+30,y+80]
@@ -144,7 +143,7 @@ def draw_tree(render_canvas: Canvas, Tree):
     points = [x,y+80, x-30,y+160, x+30,y+160]
     render_canvas.create_polygon(points, fill='green')
 
-def draw_tree_fixed(render_canvas: Canvas, x, y):
+def draw_tree_fixed(render_canvas: tk.Canvas, x, y):
     points = [x,y, x-30,y+80, x+30,y+80]
     render_canvas.create_polygon(points, fill='green')
     points = [x,y+40, x-30,y+120, x+30,y+120]
@@ -152,7 +151,7 @@ def draw_tree_fixed(render_canvas: Canvas, x, y):
     points = [x,y+80, x-30,y+160, x+30,y+160]
     render_canvas.create_polygon(points, fill='green')
 
-def render_snow(render_canvas: Canvas):
+def render_snow(render_canvas: tk.Canvas):
     for i in range(len(snowFall)):
         draw_snow(render_canvas, snowFall[i])
  
@@ -164,7 +163,7 @@ def render_snow(render_canvas: Canvas):
             x = random.randrange(0, CANVAS_WIDTH)
             snowFall[i][0] = x
 
-def draw_snow(render_canvas: Canvas, snowFall):
+def draw_snow(render_canvas: tk.Canvas, snowFall):
     x = snowFall[0]
     y = snowFall[1]
     Snow_size = snowFall[2]
@@ -175,10 +174,10 @@ def draw_snow(render_canvas: Canvas, snowFall):
     render_canvas.create_line(x-smallsize,y-smallsize, x+smallsize,y+smallsize, fill='white')
 
 if __name__ == '__main__':
-    root = Tk()
+    root = tk.Tk()
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
-    canvas = Canvas(root, bg='black', height=screen_height, width=screen_width)
+    canvas = tk.Canvas(root, bg='black', height=screen_height, width=screen_width)
     canvas.pack()
     CANVAS_WIDTH = screen_width
     CANVAS_HEIGHT = screen_height

@@ -145,7 +145,7 @@ def render_snow(render_canvas: Canvas):
     for i in range(len(snowFall)):
         draw_snow(render_canvas, snowFall[i])
  
-        snowFall[i][1] += 2
+        snowFall[i][1] += snowFall[i][3]
         if snowFall[i][1] > CANVAS_HEIGHT:
             y = random.randrange(-50, -10)
             snowFall[i][1] = y
@@ -178,7 +178,8 @@ if __name__ == '__main__':
         x = random.randrange(0, CANVAS_WIDTH)
         y = random.randrange(0, CANVAS_HEIGHT)
         Snow_size = random.randint(0,4)
-        snowFall.append([x, y, Snow_size])
+        Snow_speed = random.randint(1,4)
+        snowFall.append([x, y, Snow_size, Snow_speed])
     size = random.randint(3,5)
     heart = Heart()
     for x,y in heart._points:

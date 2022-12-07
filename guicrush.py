@@ -42,7 +42,7 @@ class Heart:
         self._edge_diffusion_points = set()
         self._center_diffusion_points = set()
         self.all_points = {}
-        self.build(3000)
+        self.build(1000)
         self.generate_frame = generate_frame
         for frame in range(generate_frame):
             self.calc(frame)
@@ -182,12 +182,34 @@ if __name__ == '__main__':
         snowFall.append([x, y, Snow_size, Snow_speed])
     size = random.randint(3,5)
     heart = Heart()
+    next = 0
     for x,y in heart._points:
-        canvas.create_text(CANVAS_CENTER_X, CANVAS_CENTER_Y, text="HELLO WORLD", fill="red", font=('Helvetica 15 bold'))
+        if next <= 30:
+            if next == 0 :
+                text_1 = canvas.create_text(CANVAS_CENTER_X, CANVAS_CENTER_Y, text="Loading...", fill="#C80000", font=('Helvetica 12'))
+            elif next == 30:
+                canvas.delete(text_1)
+            next = next + 1
+        elif next > 30 and next <= 60:
+            if next == 31 :
+                text_2 = canvas.create_text(CANVAS_CENTER_X, CANVAS_CENTER_Y, text="Loading...", fill="#A00000", font=('Helvetica 12'))
+            elif next == 60:
+                canvas.delete(text_2)
+            next = next + 1
+        elif next > 60:
+            next = 0
         canvas.create_rectangle(x, y, x + 1, y + 1, width = 0, fill = HEART_COLOR)
         root.update()
         time.sleep(0.01)
 
-    time.sleep(1)    
+    canvas.delete(text_1)
+    canvas.delete(text_2)
+    text_3 = canvas.create_text(CANVAS_CENTER_X, CANVAS_CENTER_Y, text="3", fill="#FFFFFF", font=('Helvetica 12'))
+    time.sleep(3)
+    text_4 = canvas.create_text(CANVAS_CENTER_X, CANVAS_CENTER_Y, text="2", fill="#FFFFFF", font=('Helvetica 12'))
+    time.sleep(1)
+    text_5 = canvas.create_text(CANVAS_CENTER_X, CANVAS_CENTER_Y, text="1", fill="#FFFFFF", font=('Helvetica 12'))
+    time.sleep(1)
+
     draw(root, canvas, heart)
     root.mainloop()

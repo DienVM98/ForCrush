@@ -42,7 +42,7 @@ class Heart:
         self._edge_diffusion_points = set()
         self._center_diffusion_points = set()
         self.all_points = {}
-        self.build(1000)
+        self.build(5000)
         self.generate_frame = generate_frame
         for frame in range(generate_frame):
             self.calc(frame)
@@ -59,7 +59,7 @@ class Heart:
                 self._edge_diffusion_points.add((x, y))
  
         point_list = list (self._points)
-        for _ in range(4000):
+        for _ in range(2500):
             x, y = random.choice(point_list)
             x, y = scatter_inside (x, y, 0.2)
             self._center_diffusion_points.add((x, y))
@@ -75,7 +75,7 @@ class Heart:
     def calc(self, generate_frame):
         ratio = 10 * curve(generate_frame / 10 * pi)
         halo_radius = int(4 * 6 * (1 + curve(generate_frame / 10 * pi)))
-        halo_number = 100
+        halo_number = 25
         all_points = []
         heart_halo_points = set()
         for _ in range (halo_number):
@@ -86,7 +86,7 @@ class Heart:
                 heart_halo_points.add((x, y))
                 x += random.randint(-70, 70)
                 y += random.randint(-70, 70)
-                size = random.choice((2, 2, 1))
+                size = random.choice((1, 2, 3, 4))
                 all_points.append((x, y, size))
         for x, y in self._edge_diffusion_points:
             x, y = self.calc_position(x, y, ratio)
@@ -110,30 +110,41 @@ def draw(root: Tk, render_canvas: Canvas, render_heart:Heart, render_frame = 0):
     root.after(160, draw, root, render_canvas, render_heart, render_frame +1)
 
 def render_tree(render_canvas: Canvas):
-    draw_tree(render_canvas, 70, 830)
-    draw_tree(render_canvas, 142, 810)
-    draw_tree(render_canvas, 250, 820)
-    draw_tree(render_canvas, 329, 840)
-    draw_tree(render_canvas, 402, 830)
-    draw_tree(render_canvas, 475, 810)
-    draw_tree(render_canvas, 595, 840)
-    draw_tree(render_canvas, 675, 810)
-    draw_tree(render_canvas, 783, 840)
-    draw_tree(render_canvas, 847, 820)
-    draw_tree(render_canvas, 925, 840)
-    draw_tree(render_canvas, 1047, 830)
-    draw_tree(render_canvas, 1119, 810)
-    draw_tree(render_canvas, 1204, 840)
-    draw_tree(render_canvas, 1269, 820)
-    draw_tree(render_canvas, 1339, 840)
-    draw_tree(render_canvas, 1458, 830)
-    draw_tree(render_canvas, 1514, 810)
-    draw_tree(render_canvas, 1644, 830)
-    draw_tree(render_canvas, 1785, 820)
-    draw_tree(render_canvas, 1859, 820)
+    draw_tree_fixed(render_canvas, 70, 830)
+    draw_tree_fixed(render_canvas, 142, 810)
+    draw_tree_fixed(render_canvas, 250, 820)
+    draw_tree_fixed(render_canvas, 329, 840)
+    draw_tree_fixed(render_canvas, 402, 830)
+    draw_tree_fixed(render_canvas, 475, 810)
+    draw_tree_fixed(render_canvas, 595, 840)
+    draw_tree_fixed(render_canvas, 675, 810)
+    draw_tree_fixed(render_canvas, 783, 840)
+    draw_tree_fixed(render_canvas, 847, 820)
+    draw_tree_fixed(render_canvas, 925, 840)
+    draw_tree_fixed(render_canvas, 1047, 830)
+    draw_tree_fixed(render_canvas, 1119, 810)
+    draw_tree_fixed(render_canvas, 1204, 840)
+    draw_tree_fixed(render_canvas, 1269, 820)
+    draw_tree_fixed(render_canvas, 1339, 840)
+    draw_tree_fixed(render_canvas, 1458, 830)
+    draw_tree_fixed(render_canvas, 1514, 810)
+    draw_tree_fixed(render_canvas, 1644, 830)
+    draw_tree_fixed(render_canvas, 1785, 820)
+    draw_tree_fixed(render_canvas, 1859, 820)
+    for i in range(len(Tree)):
+        draw_tree(render_canvas, Tree[i])
 
-def draw_tree(render_canvas: Canvas, x,y):
-    print('')
+def draw_tree(render_canvas: Canvas, Tree):
+    x = Tree[0]
+    y = Tree[1]
+    points = [x,y, x-30,y+80, x+30,y+80]
+    render_canvas.create_polygon(points, fill='green')
+    points = [x,y+40, x-30,y+120, x+30,y+120]
+    render_canvas.create_polygon(points, fill='green')
+    points = [x,y+80, x-30,y+160, x+30,y+160]
+    render_canvas.create_polygon(points, fill='green')
+
+def draw_tree_fixed(render_canvas: Canvas, x, y):
     points = [x,y, x-30,y+80, x+30,y+80]
     render_canvas.create_polygon(points, fill='green')
     points = [x,y+40, x-30,y+120, x+30,y+120]
@@ -173,6 +184,7 @@ if __name__ == '__main__':
     CANVAS_HEIGHT = screen_height
     CANVAS_CENTER_X = CANVAS_WIDTH / 2
     CANVAS_CENTER_Y = CANVAS_HEIGHT / 2
+
     snowFall = []
     for i in range(200):
         x = random.randrange(0, CANVAS_WIDTH)
@@ -180,36 +192,62 @@ if __name__ == '__main__':
         Snow_size = random.randint(0,4)
         Snow_speed = random.randint(1,4)
         snowFall.append([x, y, Snow_size, Snow_speed])
-    size = random.randint(3,5)
+
+    Tree = []
+    for i in range(20):
+        x = random.randrange(0, CANVAS_WIDTH)
+        y = random.randrange(800, 860)
+        Tree.append([x, y])
+
+
     heart = Heart()
     next = 0
     for x,y in heart._points:
         if next <= 30:
             if next == 0 :
-                text_1 = canvas.create_text(CANVAS_CENTER_X, CANVAS_CENTER_Y, text="Loading...", fill="#C80000", font=('Helvetica 12'))
+                text_1 = canvas.create_text(CANVAS_CENTER_X, CANVAS_CENTER_Y, text="Loading...", fill="#A00000", font=('Helvetica 13'))
             elif next == 30:
                 canvas.delete(text_1)
             next = next + 1
         elif next > 30 and next <= 60:
             if next == 31 :
-                text_2 = canvas.create_text(CANVAS_CENTER_X, CANVAS_CENTER_Y, text="Loading...", fill="#A00000", font=('Helvetica 12'))
+                text_2 = canvas.create_text(CANVAS_CENTER_X, CANVAS_CENTER_Y, text="Loading·..", fill="#A00000", font=('Helvetica 13'))
             elif next == 60:
                 canvas.delete(text_2)
             next = next + 1
-        elif next > 60:
+        elif next > 60 and next <= 90:
+            if next == 61 :
+                text_3 = canvas.create_text(CANVAS_CENTER_X, CANVAS_CENTER_Y, text="Loading.·.", fill="#A00000", font=('Helvetica 13'))
+            elif next == 90:
+                canvas.delete(text_3)
+            next = next + 1
+        elif next > 90 and next <= 120:
+            if next == 91 :
+                text_4 = canvas.create_text(CANVAS_CENTER_X, CANVAS_CENTER_Y, text="Loading..·", fill="#A00000", font=('Helvetica 13'))
+            elif next == 120:
+                canvas.delete(text_4)
+            next = next + 1
+        elif next > 120:
             next = 0
         canvas.create_rectangle(x, y, x + 1, y + 1, width = 0, fill = HEART_COLOR)
         root.update()
-        time.sleep(0.01)
+        time.sleep(0.02)
 
     canvas.delete(text_1)
     canvas.delete(text_2)
-    text_3 = canvas.create_text(CANVAS_CENTER_X, CANVAS_CENTER_Y, text="3", fill="#FFFFFF", font=('Helvetica 12'))
-    time.sleep(3)
-    text_4 = canvas.create_text(CANVAS_CENTER_X, CANVAS_CENTER_Y, text="2", fill="#FFFFFF", font=('Helvetica 12'))
-    time.sleep(1)
-    text_5 = canvas.create_text(CANVAS_CENTER_X, CANVAS_CENTER_Y, text="1", fill="#FFFFFF", font=('Helvetica 12'))
-    time.sleep(1)
+    canvas.delete(text_3)
+    canvas.delete(text_4)
+    root.update()
+
+    countdown = 10
+    for i in range(11):
+        text_5 = canvas.create_text(CANVAS_CENTER_X, CANVAS_CENTER_Y, text=str(countdown), fill="#FFFFFF", font=('Helvetica 16'))
+        root.update()
+        time.sleep(1)
+        canvas.delete(text_5)
+        root.update()
+        countdown = countdown - 1
+
 
     draw(root, canvas, heart)
     root.mainloop()

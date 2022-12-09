@@ -6,10 +6,18 @@ from playsound import playsound
 from pathlib import Path
 from threading import Thread
 import threading
+import os
+import sys
 
 IMAGE_ENLARGE = 11
 HEART_COLOR = "#FF0000"
 CHOOSE_POINT = 5000
+
+
+def resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
  
 def heart_function(t, shrink_ratio: float = IMAGE_ENLARGE):
    
@@ -179,7 +187,7 @@ def draw_snow(render_canvas: tk.Canvas, snowFall):
     render_canvas.create_line(x-smallsize,y-smallsize, x+smallsize,y+smallsize, fill='white')
 
 def play_music():
-    audio = Path().cwd() / "WithYou.mp3"
+    audio = resource_path("WithYou.mp3")
     playsound(audio)
     canvas.after(500, closeWindow)
 

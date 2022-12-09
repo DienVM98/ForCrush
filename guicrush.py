@@ -2,9 +2,14 @@ import random
 from math import sin, cos, pi, log
 import tkinter as tk
 import time
+from playsound import playsound
+from pathlib import Path
+from threading import Thread
+import threading
 
 IMAGE_ENLARGE = 11
 HEART_COLOR = "#FF0000"
+CHOOSE_POINT = 400
  
 def heart_function(t, shrink_ratio: float = IMAGE_ENLARGE):
    
@@ -41,7 +46,7 @@ class Heart:
         self._edge_diffusion_points = set()
         self._center_diffusion_points = set()
         self.all_points = {}
-        self.build(5000)
+        self.build(CHOOSE_POINT)
         self.generate_frame = generate_frame
         for frame in range(generate_frame):
             self.calc(frame)
@@ -173,7 +178,12 @@ def draw_snow(render_canvas: tk.Canvas, snowFall):
     render_canvas.create_line(x+smallsize,y-smallsize, x-smallsize,y+smallsize, fill='white')
     render_canvas.create_line(x-smallsize,y-smallsize, x+smallsize,y+smallsize, fill='white')
 
-def Final_screen():
+def play_music():
+    audio = Path().cwd() / "WithYou.mp3"
+    playsound(audio)
+
+def Main_screen(root):
+    canvas.delete('all')
     for i in range(200):
         x = random.randrange(0, CANVAS_WIDTH)
         y = random.randrange(0, CANVAS_HEIGHT)
@@ -237,11 +247,11 @@ def Final_screen():
 
 
     draw(root, canvas, heart)
+    t2.start()
 
-def Write(str):
+def Write(str, delta):
     canvas_t = canvas.create_text(CANVAS_CENTER_X,CANVAS_CENTER_Y,text='',fill="#FFFFFF", font=('Helvetica 16'))
     ourtex = str
-    delta = 200
     delay = 0
     for x in range(len(ourtex) + 1):
         s = ourtex[:x]
@@ -250,12 +260,48 @@ def Write(str):
         delay += delta
     
 def WriteFisrt():
-    Write('Hi Crush!!!!')
+    Write('Hi Crush!!!!', 200)
+    canvas.after(4000, WriteSecond)
+
+def WriteSecond():
+    canvas.delete('all')
+    Write('Thanks for not rejecting me and I very happy the days with you', 90)
+    canvas.after(8000, WriteThird)
+
+def WriteThird():
+    canvas.delete('all')
+    Write('I have something I want to show you, But I have a question', 100)
+    canvas.after(7000, WriteFourth)
+
+def WriteFourth():
+    canvas.delete('all')
+    Write('Do you agree to go date with me on Christmas Eve?', 100)
+    canvas.after(7000, yes_no_button)
+
+def yes_button(event):
+    Main_screen(root)
+
+def no_button(event):
+    Main_screen(root)
+
+def yes_no_button():
+
+    #button yes 
+    buttonBG_YES = canvas.create_rectangle(3*CANVAS_WIDTH/4, 3*CANVAS_HEIGHT/4, 3*CANVAS_WIDTH/4+100, 3*CANVAS_HEIGHT/4+30, fill="black", outline="white")
+    buttonTXT_YES = canvas.create_text(3*CANVAS_WIDTH/4+50, 3*CANVAS_HEIGHT/4+15, text="YES", fill='white')
+    canvas.tag_bind(buttonBG_YES, "<Button-1>", yes_button) ## when the square is clicked runs function "clicked".
+    canvas.tag_bind(buttonTXT_YES, "<Button-1>", yes_button) ## same, but for the text.
+
+    buttonBG_NO = canvas.create_rectangle(CANVAS_WIDTH/4, 3*CANVAS_HEIGHT/4, CANVAS_WIDTH/4+100, 3*CANVAS_HEIGHT/4+30, fill="black", outline="white")
+    buttonTXT_NO = canvas.create_text(CANVAS_WIDTH/4+50, 3*CANVAS_HEIGHT/4+15, text="NO", fill='white')
+    canvas.tag_bind(buttonBG_NO, "<Button-1>", no_button) ## when the square is clicked runs function "clicked".
+    canvas.tag_bind(buttonTXT_NO, "<Button-1>", no_button) ## same, but for the text.
 
 def raise_frame(frame):
     frame.tkraise()
 
 if __name__ == '__main__':
+    t2 = threading.Thread(target=play_music)
     root = tk.Tk()
     root.rowconfigure(0, weight=1)
     root.columnconfigure(0, weight=1)
@@ -268,9 +314,7 @@ if __name__ == '__main__':
     CANVAS_HEIGHT = screen_height
     CANVAS_CENTER_X = CANVAS_WIDTH / 2
     CANVAS_CENTER_Y = CANVAS_HEIGHT / 2
-    WriteFisrt()
-    canvas.after(10000, Final_screen)
     snowFall = []
     Tree = []
-    Final_screen
+    WriteFisrt()
     root.mainloop()

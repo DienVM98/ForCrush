@@ -173,18 +173,7 @@ def draw_snow(render_canvas: tk.Canvas, snowFall):
     render_canvas.create_line(x+smallsize,y-smallsize, x-smallsize,y+smallsize, fill='white')
     render_canvas.create_line(x-smallsize,y-smallsize, x+smallsize,y+smallsize, fill='white')
 
-if __name__ == '__main__':
-    root = tk.Tk()
-    screen_width = root.winfo_screenwidth()
-    screen_height = root.winfo_screenheight()
-    canvas = tk.Canvas(root, bg='black', height=screen_height, width=screen_width)
-    canvas.pack()
-    CANVAS_WIDTH = screen_width
-    CANVAS_HEIGHT = screen_height
-    CANVAS_CENTER_X = CANVAS_WIDTH / 2
-    CANVAS_CENTER_Y = CANVAS_HEIGHT / 2
-
-    snowFall = []
+def Final_screen():
     for i in range(200):
         x = random.randrange(0, CANVAS_WIDTH)
         y = random.randrange(0, CANVAS_HEIGHT)
@@ -192,7 +181,6 @@ if __name__ == '__main__':
         Snow_speed = random.randint(1,4)
         snowFall.append([x, y, Snow_size, Snow_speed])
 
-    Tree = []
     for i in range(20):
         x = random.randrange(0, CANVAS_WIDTH)
         y = random.randrange(800, 860)
@@ -249,4 +237,40 @@ if __name__ == '__main__':
 
 
     draw(root, canvas, heart)
+
+def Write(str):
+    canvas_t = canvas.create_text(CANVAS_CENTER_X,CANVAS_CENTER_Y,text='',fill="#FFFFFF", font=('Helvetica 16'))
+    ourtex = str
+    delta = 200
+    delay = 0
+    for x in range(len(ourtex) + 1):
+        s = ourtex[:x]
+        newtext = lambda s=s: canvas.itemconfigure(canvas_t, text = s)
+        canvas.after(delay, newtext)
+        delay += delta
+    
+def WriteFisrt():
+    Write('Hi Crush!!!!')
+
+def raise_frame(frame):
+    frame.tkraise()
+
+if __name__ == '__main__':
+    root = tk.Tk()
+    root.rowconfigure(0, weight=1)
+    root.columnconfigure(0, weight=1)
+    root.state('zoomed')
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    canvas = tk.Canvas(root, bg='black', height=screen_height, width=screen_width)
+    canvas.pack()
+    CANVAS_WIDTH = screen_width
+    CANVAS_HEIGHT = screen_height
+    CANVAS_CENTER_X = CANVAS_WIDTH / 2
+    CANVAS_CENTER_Y = CANVAS_HEIGHT / 2
+    WriteFisrt()
+    canvas.after(10000, Final_screen)
+    snowFall = []
+    Tree = []
+    Final_screen
     root.mainloop()

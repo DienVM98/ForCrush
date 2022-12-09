@@ -9,7 +9,7 @@ import threading
 
 IMAGE_ENLARGE = 11
 HEART_COLOR = "#FF0000"
-CHOOSE_POINT = 400
+CHOOSE_POINT = 5000
  
 def heart_function(t, shrink_ratio: float = IMAGE_ENLARGE):
    
@@ -94,11 +94,11 @@ class Heart:
                 all_points.append((x, y, size))
         for x, y in self._edge_diffusion_points:
             x, y = self.calc_position(x, y, ratio)
-            size = 1
+            size = random.randint(1,2)
             all_points.append((x, y, size))
         for x, y in self._center_diffusion_points:
             x, y = self.calc_position(x, y, ratio)
-            size = 1
+            size = random.randint(1,2)
             all_points.append((x, y, size))
         self.all_points[generate_frame] = all_points
 
@@ -181,17 +181,18 @@ def draw_snow(render_canvas: tk.Canvas, snowFall):
 def play_music():
     audio = Path().cwd() / "WithYou.mp3"
     playsound(audio)
+    canvas.after(500, closeWindow)
 
-def Main_screen(root):
+def Main_screen():
     canvas.delete('all')
     for i in range(200):
         x = random.randrange(0, CANVAS_WIDTH)
         y = random.randrange(0, CANVAS_HEIGHT)
-        Snow_size = random.randint(0,4)
-        Snow_speed = random.randint(1,4)
+        Snow_size = random.randint(0,6)
+        Snow_speed = random.randint(1,6)
         snowFall.append([x, y, Snow_size, Snow_speed])
 
-    for i in range(20):
+    for i in range(10):
         x = random.randrange(0, CANVAS_WIDTH)
         y = random.randrange(800, 860)
         Tree.append([x, y])
@@ -266,23 +267,37 @@ def WriteFisrt():
 def WriteSecond():
     canvas.delete('all')
     Write('Thanks for not rejecting me and I very happy the days with you', 90)
-    canvas.after(8000, WriteThird)
+    canvas.after(9000, WriteThird)
 
 def WriteThird():
     canvas.delete('all')
-    Write('I have something I want to show you, But I have a question', 100)
-    canvas.after(7000, WriteFourth)
+    Write('I have a thing that I want to show you, But I have a question first', 100)
+    canvas.after(9000, WriteFourth)
 
 def WriteFourth():
     canvas.delete('all')
-    Write('Do you agree to go date with me on Christmas Eve?', 100)
+    Write('Do you agree to go date with me on Christmas Eve 24th Dec?', 100)
     canvas.after(7000, yes_no_button)
 
+def ThankyouWindow():
+    canvas.delete('all')
+    Write('Thank you <3', 200)
+    canvas.after(5000, Main_screen)
+
+def closeWindow():
+    canvas.destroy()
+    root.destroy()
+
+def HandleIfPressNoButton():
+    canvas.delete('all')
+    canvas.create_text(CANVAS_CENTER_X,CANVAS_CENTER_Y,text='Cái gì đêy? sao em lại nhấm vô nút này!!!! Khỏi cho coi trái tim luôn',fill="#FFFFFF", font=('Helvetica 16'))
+    canvas.after(4000,closeWindow)
+
 def yes_button(event):
-    Main_screen(root)
+    ThankyouWindow()
 
 def no_button(event):
-    Main_screen(root)
+    HandleIfPressNoButton()
 
 def yes_no_button():
 
